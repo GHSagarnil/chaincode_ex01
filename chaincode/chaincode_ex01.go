@@ -62,7 +62,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	var A, B string    // Entities
 	var Aval, Bval int // Asset holdings
 	var err error
-    //var err1 error
+    
 
 	if len(args) != 4 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 4")
@@ -326,9 +326,6 @@ func (t *SimpleChaincode) updateAssemblyLineStatus(stub shim.ChaincodeStubInterf
 		return nil, nil
 	}
 
-		
-	
-	
 	// Delete the row pertaining to this assemblyLineId
 	err = stub.DeleteRow(
 		"Assemblyline",
@@ -338,9 +335,7 @@ func (t *SimpleChaincode) updateAssemblyLineStatus(stub shim.ChaincodeStubInterf
 		return nil, errors.New("Failed deleting row.")
 	}
 
-	
-	
-		//assemblyLineId:=row.Columns[1].GetString_()
+		//assemblyLineId:=row.Columns[0].GetString_()
 		serialId:=row.Columns[1].GetString_()
 		originalFilamentBatchId:=row.Columns[2].GetString_()
 		originalLedBatchId:=row.Columns[3].GetString_()
@@ -371,7 +366,7 @@ func (t *SimpleChaincode) updateAssemblyLineStatus(stub shim.ChaincodeStubInterf
 			return nil, err 
 		}
 		if !ok && err == nil {
-			return nil, errors.New("Row already exists.")
+			return nil, errors.New("Row already exists in Assemblyline.")
 		}
 		
 	return nil, nil
