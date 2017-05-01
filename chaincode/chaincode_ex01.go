@@ -304,8 +304,11 @@ func (t *SimpleChaincode) updateAssemblyLineStatus(stub shim.ChaincodeStubInterf
 
 	if len(args) != 2 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 2.")
+	} else {
+		return nil, errors.New("Correct number of arguments. Got 2.")
 	}
 
+/*
 	assemblyLineId := args[0]
 	assemblyLineStatus := args[1]
 	
@@ -368,7 +371,7 @@ func (t *SimpleChaincode) updateAssemblyLineStatus(stub shim.ChaincodeStubInterf
 		if !ok && err == nil {
 			return nil, errors.New("Row already exists in Assemblyline.")
 		}
-		
+*/		
 	return nil, nil
 
 }
@@ -397,15 +400,13 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	} else if function == "startAssemblyLine" {
 		fmt.Printf("Function is startAssemblyLine")
 		return t.startAssemblyLine(stub, args)
-	} else if function == "delete" {
-		// Deletes an entity from its state
-		fmt.Printf("Function is delete")
-		return t.delete(stub, args)
 	} else if function == "updateAssemblyLineStatus" {
-		// Deletes an entity from its state
 		fmt.Printf("Function is updateAssemblyLineStatus")
 		return t.updateAssemblyLineStatus(stub, args)
-	}
+	} else if function == "delete" {
+		fmt.Printf("Function is delete")
+		return t.delete(stub, args)
+	} 
 
 	return nil, errors.New("Received unknown function invocation")
 }
@@ -424,6 +425,9 @@ func (t* SimpleChaincode) Run(stub shim.ChaincodeStubInterface, function string,
 	} else if function == "startAssemblyLine" {
 		fmt.Printf("Function is startAssemblyLine")
 		return t.startAssemblyLine(stub, args)
+	}  else if function == "updateAssemblyLineStatus" {
+		fmt.Printf("Function is updateAssemblyLineStatus")
+		return t.updateAssemblyLineStatus(stub, args)
 	} else if function == "init" {
 		fmt.Printf("Function is init")
 		return t.Init(stub, function, args)
@@ -431,10 +435,6 @@ func (t* SimpleChaincode) Run(stub shim.ChaincodeStubInterface, function string,
 		// Deletes an entity from its state
 		fmt.Printf("Function is delete")
 		return t.delete(stub, args)
-	}else if function == "updateAssemblyLineStatus" {
-		// Deletes an entity from its state
-		fmt.Printf("Function is updateAssemblyLineStatus")
-		return t.updateAssemblyLineStatus(stub, args)
 	}
 
 	return nil, errors.New("Received unknown function invocation")
