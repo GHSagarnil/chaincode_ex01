@@ -93,14 +93,14 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	}
 
 	//iQOS Changes starts ---------------------------------------------------------------------
-//	/*
+	/*
 	// Check if table already exists
 	_, err = stub.GetTable("AssemblyLine")
 	if err == nil {
 		// Table already exists; do not recreate
 		return nil, nil
 	}
-//*/
+*/
 	// Create application Table
 	err = stub.CreateTable("AssemblyLine", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "assemblyLineId", Type: shim.ColumnDefinition_STRING, Key: true},
