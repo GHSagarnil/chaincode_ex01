@@ -257,7 +257,6 @@ func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string
 //iQOS Changes starts---------------------------------------------------------------------
 //startAssemblyLine to start an Assemblyline
 func (t *SimpleChaincode) startAssemblyLine(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-
 if len(args) != 9 {
 			return nil, fmt.Errorf("Incorrect number of arguments. Expecting 9. Got: %d.", len(args))
 		}
@@ -304,11 +303,12 @@ func (t *SimpleChaincode) updateAssemblyLineStatus(stub shim.ChaincodeStubInterf
 
 	if len(args) != 2 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 2.")
-	} else {
-		return nil, errors.New("Correct number of arguments. Got 2.")
-	}
+	} 
+	//else {
+	//	return nil, errors.New("Correct number of arguments. Got 2.")
+	//}
 
-/*
+
 	assemblyLineId := args[0]
 	assemblyLineStatus := args[1]
 	
@@ -371,7 +371,7 @@ func (t *SimpleChaincode) updateAssemblyLineStatus(stub shim.ChaincodeStubInterf
 		if !ok && err == nil {
 			return nil, errors.New("Row already exists in Assemblyline.")
 		}
-*/		
+		
 	return nil, nil
 
 }
@@ -472,6 +472,42 @@ func (t *SimpleChaincode) getValue(stub shim.ChaincodeStubInterface, args []stri
 }
 
 
+//get the AssemblyLine against ID
+func (t *SimpleChaincode) getAssemblyLineByID(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting AssemblyLineID to query")
+	}
+
+	assemblyLineID := args[0]
+	
+
+	// Get the row pertaining to this assemblyLineID
+	var columns []shim.Column
+	col1 := shim.Column{Value: &shim.Column_String_{String_: assemblyLineID}}
+	columns = append(columns, col1)
+
+	row, err := stub.GetRow("AssemblyLine", columns)
+	if err != nil {
+		jsonResp := "{\"Error\":\"Failed to get the data for the assemblyLineID " + assemblyLineID + "\"}"
+		return nil, errors.New(jsonResp)
+	}
+
+	// GetRows returns empty message if key does not exist
+	if len(row.Columns) == 0 {
+		jsonResp := "{\"Error\":\"Failed to get the data for the assemblyLineID " + assemblyLineID + "\"}"
+		return nil, errors.New(jsonResp)
+	}
+
+	//return []byte (row), nil
+	 mapB, _ := json.Marshal(row)
+    fmt.Println(string(mapB))
+	
+	return mapB, nil
+
+}
+
+
 //get the status against the AssemblyLineID
 func (t *SimpleChaincode) getAssemblyLineStatus(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
@@ -505,14 +541,32 @@ func (t *SimpleChaincode) getAssemblyLineStatus(stub shim.ChaincodeStubInterface
 	
 	res2E.AssemblyLineStatus = row.Columns[9].GetString_()
 	
+  /*  
     mapB, _ := json.Marshal(res2E)
     fmt.Println(string(mapB))
 	return mapB, nil
-	
-	//return []byte (res2E.AssemblyLineStatus), nil
+  */	
+ 
+    return []byte (res2E.AssemblyLineStatus), nil
 
 }
 
+//get all AssemblyLines
+func (t *SimpleChaincode) getAllAssemblyLines(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {	
+var columns []shim.Column
+
+	rows, err := stub.GetRows("AssemblyLine", columns)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to retrieve row")
+	}
+ 
+    //return []byte (rows), nil
+	 mapB, _ := json.Marshal(rows)
+    fmt.Println(string(mapB))
+	
+	return mapB, nil
+
+}
 
 // query queries the chaincode
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
@@ -524,9 +578,15 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	} else if function == "getAssemblyLineStatus" { 
 		t := SimpleChaincode{}
 		return t.getAssemblyLineStatus(stub, args)
+	} else if function == "getAssemblyLineByID" { 
+		t := SimpleChaincode{}
+		return t.getAssemblyLineByID(stub, args)
+	} else if function == "getAllAssemblyLines" { 
+		t := SimpleChaincode{}
+		return t.getAllAssemblyLines(stub, args)
 	}
 	
-	return nil, nil
+	return nil, errors.New("Received unknown function query")
 }
 //iQOS Changes ends------------------------------------------------------------------------------------------
 
