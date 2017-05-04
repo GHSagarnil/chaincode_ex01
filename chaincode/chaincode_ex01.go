@@ -560,8 +560,29 @@ var columns []shim.Column
 		return nil, fmt.Errorf("Failed to retrieve row")
 	}
  
-    //return []byte (rows), nil
-	 mapB, _ := json.Marshal(rows)
+   
+		
+	res2E:= []*AssemblyLine{}	
+	
+	for row := range rows {		
+		newApp:= new(AssemblyLine)
+		newApp.AssemblyLineId = row.Columns[0].GetString_()
+		newApp.SerialId = row.Columns[1].GetString_()
+		newApp.OriginalFilamentBatchId = row.Columns[2].GetString_()
+		newApp.OriginalLedBatchId = row.Columns[3].GetString_()
+		newApp.OriginalCircuitBoardBatchId = row.Columns[4].GetString_()
+		newApp.OriginalWireBatchId = row.Columns[5].GetString_()
+		newApp.OriginalCasingBatchId = row.Columns[6].GetString_()
+		newApp.OriginalAdaptorBatchId = row.Columns[7].GetString_()
+		newApp.OriginalStickPodBatchId = row.Columns[8].GetString_()
+		newApp.AssemblyLineStatus = row.Columns[9].GetString_()
+		
+		if len(newApp.AssemblyLineId) > 0{
+		res2E=append(res2E,newApp)		
+		}				
+	}
+	
+    mapB, _ := json.Marshal(res2E)
     fmt.Println(string(mapB))
 	
 	return mapB, nil
