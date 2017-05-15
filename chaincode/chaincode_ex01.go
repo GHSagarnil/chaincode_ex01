@@ -41,18 +41,18 @@ type GetAssemblyLineStatus struct{
 
 
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	fmt.Printf("Init called, initializing chaincode")
+	fmt.Printf("Init called, initializing chaincode for testing")
 	
-	/*
+	
 	// Check if table already exists
-	_, err = stub.GetTable("AssemblyLine")
+	_, err := stub.GetTable("AssemblyLine")
 	if err == nil {
 		// Table already exists; do not recreate
 		return nil, nil
 	}
-   */
+   
 	// Create application Table
-	err := stub.CreateTable("AssemblyLine", []*shim.ColumnDefinition{
+	err = stub.CreateTable("AssemblyLine", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "assemblyLineId", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "serialId", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "originalFilamentBatchId", Type: shim.ColumnDefinition_STRING, Key: false},
